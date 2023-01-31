@@ -65,6 +65,55 @@ We believe this issue and its duplicates are related to the same underlying prob
 
 We will address this issue and its duplicates altogether in one PR. 
 
+**thereksfour**
+
+Escalate for 5 USDC
+
+Slight-moderate incorrect slippage controls historically have been graded as medium not high.
+Look at the Criteria for Issues:
+```
+Medium: There is a viable scenario (even if unlikely) that could cause the protocol to enter a state where a material amount of funds can be lost. The attack path is possible with assumptions that either mimic on-chain conditions or reflect conditions that have a reasonable chance of becoming true in the future. The more expensive the attack is for an attacker, the less likely it will be included as a Medium (holding all other factors constant). The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+
+High: This vulnerability would result in a material loss of funds and the cost of the attack is low (relative to the amount of funds lost). The attack path is possible with reasonable assumptions that mimic on-chain conditions. The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+```
+The cost to the attacker to exploit this vulnerability is not low
+
+**sherlock-admin**
+
+ > Escalate for 5 USDC
+> 
+> Slight-moderate incorrect slippage controls historically have been graded as medium not high.
+> Look at the Criteria for Issues:
+> ```
+> Medium: There is a viable scenario (even if unlikely) that could cause the protocol to enter a state where a material amount of funds can be lost. The attack path is possible with assumptions that either mimic on-chain conditions or reflect conditions that have a reasonable chance of becoming true in the future. The more expensive the attack is for an attacker, the less likely it will be included as a Medium (holding all other factors constant). The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+> 
+> High: This vulnerability would result in a material loss of funds and the cost of the attack is low (relative to the amount of funds lost). The attack path is possible with reasonable assumptions that mimic on-chain conditions. The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+> ```
+> The cost to the attacker to exploit this vulnerability is not low
+
+You've created a valid escalation for 5 USDC!
+
+To remove the escalation from consideration: Delete your comment.
+To change the amount you've staked on this escalation: Edit your comment **(do not create a new comment)**.
+
+You may delete or edit your escalation comment anytime before the 48-hour escalation window closes. After that, the escalation becomes final.
+
+**hrishibhat**
+
+Escalation rejected
+
+The cost is extremely low for a MEV bot to trigger slippage, and the slippage amount is hard-coded, so the issue exists for all the users every time the protocol is used 
+
+**sherlock-admin**
+
+> Escalation rejected
+> 
+> The cost is extremely low for a MEV bot to trigger slippage, and the slippage amount is hard-coded, so the issue exists for all the users every time the protocol is used 
+
+This issue's escalations have been rejected!
+
+Watsons who escalated this issue will have their escalation amount deducted from their next payout.
+
 
 
 # Issue H-2: The Notional version of `lend()` can be used to lock iPTs 
@@ -138,6 +187,93 @@ Manual Review
 
 ## Recommendation
 Revert if `p` is not `MarketPlace.Principals.Notional`
+
+## Discussion
+
+**thereksfour**
+
+Escalate for 5 USDC
+
+One of the bases for this vulnerability is that ERC5095 and INotional use the same deposit function signature
+And as mentioned in the NOTE, they were different at the time.
+https://github.com/notional-finance/wrapped-fcash/blob/master/contracts/wfCashERC4626.sol#L178
+```solidity
+    function deposit(uint256 assets, address receiver) external override returns (uint256) {
+```
+https://github.com/Swivel-Finance/illuminate/blob/main/src/tokens/ERC5095.sol#L197
+```solidity
+    function deposit(address r, uint256 a) external override returns (uint256) {
+```
+This also means that the vulnerability cannot be exploited directly
+Exploiting this vulnerability requires the project to modify the deposit function, which is not a low cost
+Look at the Criteria for Issues:
+```
+Medium: There is a viable scenario (even if unlikely) that could cause the protocol to enter a state where a material amount of funds can be lost. The attack path is possible with assumptions that either mimic on-chain conditions or reflect conditions that have a reasonable chance of becoming true in the future. The more expensive the attack is for an attacker, the less likely it will be included as a Medium (holding all other factors constant). The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+
+High: This vulnerability would result in a material loss of funds and the cost of the attack is low (relative to the amount of funds lost). The attack path is possible with reasonable assumptions that mimic on-chain conditions. The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+```
+There were assumptions in the report that were not valid at the time, so the report should be medium
+
+**sherlock-admin**
+
+ > Escalate for 5 USDC
+> 
+> One of the bases for this vulnerability is that ERC5095 and INotional use the same deposit function signature
+> And as mentioned in the NOTE, they were different at the time.
+> https://github.com/notional-finance/wrapped-fcash/blob/master/contracts/wfCashERC4626.sol#L178
+> ```solidity
+>     function deposit(uint256 assets, address receiver) external override returns (uint256) {
+> ```
+> https://github.com/Swivel-Finance/illuminate/blob/main/src/tokens/ERC5095.sol#L197
+> ```solidity
+>     function deposit(address r, uint256 a) external override returns (uint256) {
+> ```
+> This also means that the vulnerability cannot be exploited directly
+> Exploiting this vulnerability requires the project to modify the deposit function, which is not a low cost
+> Look at the Criteria for Issues:
+> ```
+> Medium: There is a viable scenario (even if unlikely) that could cause the protocol to enter a state where a material amount of funds can be lost. The attack path is possible with assumptions that either mimic on-chain conditions or reflect conditions that have a reasonable chance of becoming true in the future. The more expensive the attack is for an attacker, the less likely it will be included as a Medium (holding all other factors constant). The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+> 
+> High: This vulnerability would result in a material loss of funds and the cost of the attack is low (relative to the amount of funds lost). The attack path is possible with reasonable assumptions that mimic on-chain conditions. The vulnerability must be something that is not considered an acceptable risk by a reasonable protocol team.
+> ```
+> There were assumptions in the report that were not valid at the time, so the report should be medium
+
+You've created a valid escalation for 5 USDC!
+
+To remove the escalation from consideration: Delete your comment.
+To change the amount you've staked on this escalation: Edit your comment **(do not create a new comment)**.
+
+You may delete or edit your escalation comment anytime before the 48-hour escalation window closes. After that, the escalation becomes final.
+
+**hrishibhat**
+
+Escalation rejected
+
+While Sherlock does not intend to award issues submitted based on anticipated code, this particular submission is considered unique for two reasons:
+1) This contest is a fix review contest which required auditors to have context from the previous contest. 
+2) The `deposit` function that requires the code change has been mentioned previously  
+https://github.com/sherlock-audit/2022-10-illuminate-judging/issues/106 and a fix has been added
+https://github.com/Swivel-Finance/illuminate/pull/28
+
+
+
+**sherlock-admin**
+
+> Escalation rejected
+> 
+> While Sherlock does not intend to award issues submitted based on anticipated code, this particular submission is considered unique for two reasons:
+> 1) This contest is a fix review contest which required auditors to have context from the previous contest. 
+> 2) The `deposit` function that requires the code change has been mentioned previously  
+> https://github.com/sherlock-audit/2022-10-illuminate-judging/issues/106 and a fix has been added
+> https://github.com/Swivel-Finance/illuminate/pull/28
+> 
+> 
+
+This issue's escalations have been rejected!
+
+Watsons who escalated this issue will have their escalation amount deducted from their next payout.
+
+
 
 # Issue M-1: ERC5095 has not approved MarketPlace to spend tokens in ERC5095 
 
